@@ -21,30 +21,25 @@
   </div>
 
   <script>
-    async function sendMessage() {
-      const input = document.getElementById("userInput");
-      const message = input.value.trim();
-      if (!message) return;
+    document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const input = document.getElementById("mensaje");
+        const mensaje = input.value;
 
-      // Mostrar mensaje del usuario
-      const messagesDiv = document.getElementById("messages");
-      messagesDiv.innerHTML += `<div class="msg user">${message}</div>`;
-      input.value = "";
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ mensaje: mensaje })
+        });
 
-      // Llamar a la API FastAPI
-      const response = await fetch("http://13.59.182.132:8000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mensaje: message })
-      });
+        const data = await response.json();
+        mostrarMensaje("usuario", mensaje);
+        mostrarMensaje("bot", data.respuesta);
+        input.value = "";
+    });
+</script>
 
-      const data = await response.json();
-      const respuestaBot = data.respuesta || "Error del bot";
-
-      // Mostrar respuesta del bot
-      messagesDiv.innerHTML += `<div class="msg bot">${respuestaBot}</div>`;
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-  </script>
 </body>
 </html>
