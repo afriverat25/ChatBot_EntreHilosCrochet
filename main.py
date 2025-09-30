@@ -30,7 +30,7 @@ def cargar_intenciones_desde_mongo():
     return intenciones_dict, respuestas_dict
 
 intenciones, respuestas = cargar_intenciones_desde_mongo()
-modelo = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+modelo = SentenceTransformer("/home/ec2-user/ChatBot_EntreHilosCrochet/models/all-MiniLM-L6-v2")
 intenciones_embeddings = {intent: modelo.encode(frases, convert_to_tensor=True) for intent, frases in intenciones.items()}
 
 def detectar_intencion(texto_usuario, umbral=0.6):
