@@ -52,16 +52,16 @@ def detectar_intencion(texto_usuario, umbral=0.6):
 
 # --- FastAPI ---
 
+# Modelo para recibir mensajes
 class MensajeUsuario(BaseModel):
     mensaje: str
 
-@app.post("/chat")
-async def chat_con_usuario(data: MensajeUsuario):
-    mensaje_usuario = data.mensaje
-    intencion, score = detectar_intencion(mensaje_usuario)
+# Montamos la carpeta "static" en la raíz
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
-    if intencion is None:
-        return {"respuesta": respuestas.get("desconocido", ["Perdona, aún estoy aprendiendo y no entendí bien. 😊"])[0]}
-    else:
-        respuesta_seleccionada = random.choice(respuestas.get(intencion, ["Perdona, aún estoy aprendiendo y no entendí bien. 😊"]))
-        return {"respuesta": respuesta_seleccionada}
+# Endpoint de la API
+@app.post("/api/chat")
+async def chat_con_usuario(data: MensajeUsuario):
+    # Aquí va tu lógica de LLM + Mongo
+    respuesta = f"Echo del bot: {data.mensaje}"
+    return {"respuesta": respuesta}
