@@ -7,6 +7,7 @@ from sentence_transformers import SentenceTransformer, util
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
 app = FastAPI()  # 👈 primero defines la app
 
@@ -52,16 +53,14 @@ def detectar_intencion(texto_usuario, umbral=0.6):
 
 # --- FastAPI ---
 
-# Modelo para recibir mensajes
 class MensajeUsuario(BaseModel):
     mensaje: str
 
-# Montamos la carpeta "static" en la raíz
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
-
-# Endpoint de la API
 @app.post("/api/chat")
 async def chat_con_usuario(data: MensajeUsuario):
-    # Aquí va tu lógica de LLM + Mongo
+    # Aquí va tu LLM con Mongo
     respuesta = f"Echo del bot: {data.mensaje}"
     return {"respuesta": respuesta}
+
+# Esto va al final
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
