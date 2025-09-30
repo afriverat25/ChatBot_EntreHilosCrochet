@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot EntreHilosCrochet</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; }
+    #chat { max-width: 600px; margin: 50px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+    .msg { margin: 10px 0; padding: 10px; border-radius: 5px; }
+    .user { background: #d1e7dd; text-align: right; }
+    .bot { background: #f8d7da; text-align: left; }
+    input, button { padding: 10px; margin-top: 10px; width: 100%; }
+  </style>
+</head>
+<body>
+  <div id="chat">
+    <h2>Chatbot EntreHilosCrochet 🧶</h2>
+    <div id="messages"></div>
+    <input type="text" id="userInput" placeholder="Escribe tu mensaje..." />
+    <button onclick="sendMessage()">Enviar</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (!message) return;
+
+      // Mostrar mensaje del usuario
+      const messagesDiv = document.getElementById("messages");
+      messagesDiv.innerHTML += `<div class="msg user">${message}</div>`;
+      input.value = "";
+
+      // Llamar a la API FastAPI
+      const response = await fetch("http://13.59.182.132:8000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mensaje: message })
+      });
+
+      const data = await response.json();
+      const respuestaBot = data.respuesta || "Error del bot";
+
+      // Mostrar respuesta del bot
+      messagesDiv.innerHTML += `<div class="msg bot">${respuestaBot}</div>`;
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  </script>
+</body>
+</html>
