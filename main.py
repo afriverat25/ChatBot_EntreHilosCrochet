@@ -13,8 +13,6 @@ app = FastAPI()  # 👈 primero defines la app
 # luego montas tu carpeta estática
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
-
-
 # --- Conexión a MongoDB ---
 try:
     uri = "mongodb+srv://afriverat24_db_user:tUjsCtHygG38wdVN@cluster0.i58fpb8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -53,7 +51,6 @@ def detectar_intencion(texto_usuario, umbral=0.6):
     return mejor_intencion, mejor_score
 
 # --- FastAPI ---
-app = FastAPI()
 
 class MensajeUsuario(BaseModel):
     mensaje: str
