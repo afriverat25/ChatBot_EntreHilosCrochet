@@ -4,9 +4,15 @@ from pydantic import BaseModel
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from sentence_transformers import SentenceTransformer, util
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+app = FastAPI()  # 👈 primero defines la app
+
+# luego montas tu carpeta estática
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
 
 
 # --- Conexión a MongoDB ---
