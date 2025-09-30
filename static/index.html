@@ -21,25 +21,43 @@
   </div>
 
   <script>
-    document.getElementById("form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const input = document.getElementById("mensaje");
-        const mensaje = input.value;
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const mensaje = input.value.trim();
+      if (!mensaje) return;
 
-        const response = await fetch("/chat", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ mensaje: mensaje })
-        });
+      // Mostrar mensaje del usuario
+      mostrarMensaje("user", mensaje);
 
+      // Enviar al backend
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ mensaje: mensaje })
+      });
+
+      if (response.ok) {
         const data = await response.json();
-        mostrarMensaje("usuario", mensaje);
         mostrarMensaje("bot", data.respuesta);
-        input.value = "";
-    });
-</script>
+      } else {
+        mostrarMensaje("bot", "⚠️ Error del bot");
+      }
 
+      input.value = "";
+    }
+
+    function mostrarMensaje(tipo, texto) {
+      const messagesDiv = document.getElementById("messages");
+      const msg = document.createElement("div");
+      msg.classList.add("msg");
+      msg.classList.add(tipo === "user" ? "user" : "bot");
+      msg.textContent = texto;
+      messagesDiv.appendChild(msg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight; // scroll automático
+    }
+  </script>
 </body>
 </html>
+
